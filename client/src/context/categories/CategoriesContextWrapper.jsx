@@ -19,19 +19,19 @@ export function CategoriesContextWrapper(props) {
             .catch(console.error);
     }, []);
 
-    // useEffect(() => {
-    //     fetch('http://localhost:5519/api/admin/categories', {
-    //         method: 'GET',
-    //         credentials: 'include',
-    //     })
-    //         .then(res => res.json())
-    //         .then(data => {
-    //             if (data.status === 'success') {
-    //                 setAdminCategories(() => data.categories);
-    //             }
-    //         })
-    //         .catch(console.error);
-    // }, []);
+    useEffect(() => {
+        fetch('http://localhost:5519/api/admin/categories', {
+            method: 'GET',
+            credentials: 'include',
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    setAdminCategories(() => data.categories);
+                }
+            })
+            .catch(console.error);
+    }, []);
 
     const values = {
         publicCategories,
