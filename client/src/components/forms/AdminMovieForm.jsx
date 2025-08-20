@@ -17,6 +17,8 @@ export function AdminMovieForm({ movie }) {
     const [rating, setRating] = useState(movie?.rating ?? 50);
     const [status, setStatus] = useState(movie?.status ?? 'draft');
 
+    const duration = hours * 60 + minutes;
+
     function handleImageFormSubmit(e) {
         e.preventDefault();
         console.log('image upload...');
@@ -25,8 +27,32 @@ export function AdminMovieForm({ movie }) {
     function handleMainFormSubmit(e) {
         e.preventDefault();
 
+        const data = {
+            title,
+            url,
+            duration,
+            category: categoryId,
+            status,
+            rating,
+        };
+
+        if (description) {
+            data.description = description;
+        }
+        if (img) {
+            data.img = img;
+        }
+        if (releaseDate) {
+            data.releaseDate = releaseDate;
+        }
+
         fetch(SERVER_ADDRESS + '/api/admin/movies', {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(data),
         })
             .then(res => res.json())
             .then(data => {

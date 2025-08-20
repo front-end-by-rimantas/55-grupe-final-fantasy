@@ -14,7 +14,6 @@ export async function getAdminCategories(req, res) {
             INNER JOIN general_status
                 ON categories.status_id = general_status.id;`;
         const [categories] = await connection.execute(sql);
-        console.log(categories);
 
         return res.json({
             status: 'success',
