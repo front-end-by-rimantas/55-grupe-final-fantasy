@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import defaultImg from '../../assets/default.png';
 import { CategoriesContext } from '../../context/categories/CategoriesContext';
+import { SERVER_ADDRESS } from '../../env';
 
 export function AdminMovieForm({ movie }) {
     const { adminCategories } = useContext(CategoriesContext);
@@ -16,9 +17,27 @@ export function AdminMovieForm({ movie }) {
     const [rating, setRating] = useState(movie?.rating ?? 50);
     const [status, setStatus] = useState(movie?.status ?? 'draft');
 
+    function handleImageFormSubmit(e) {
+        e.preventDefault();
+        console.log('image upload...');
+    }
+
+    function handleMainFormSubmit(e) {
+        e.preventDefault();
+
+        fetch(SERVER_ADDRESS + '/api/admin/movies', {
+            method: 'POST',
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(console.error);
+    }
+
     return (
         <>
-            <form className="col-12 col-md-9 col-lg-6 mt-5">
+            <form onSubmit={handleImageFormSubmit} className="col-12 col-md-9 col-lg-6 mt-5">
                 <img id="img_preview" className="d-block w-100 object-fit-contain"
                     style={{ height: '20rem', backgroundColor: '#eee' }}
                     src={img ? img : defaultImg} alt="Movie thumbnail" />
@@ -26,7 +45,7 @@ export function AdminMovieForm({ movie }) {
                 <input type="file" className="form-control" id="img" name="img" />
             </form>
 
-            <form className="col-12 col-md-9 col-lg-6 mt-5">
+            <form onSubmit={handleMainFormSubmit} className="col-12 col-md-9 col-lg-6 mt-5">
                 <div className="mb-3">
                     <label htmlFor="title" className="form-label">Title</label>
                     <input onChange={e => setTitle(e.target.value)} value={title}
