@@ -35,7 +35,27 @@ export function AdminMovieForm({ api, method, movie }) {
 
     function handleImageFormSubmit(e) {
         e.preventDefault();
-        console.log('image upload...');
+
+        setImgErr('');
+
+        const imageDOM = document.getElementById('img');
+        const formData = new FormData();
+        formData.append('img', imageDOM.files[0]);
+
+        fetch(SERVER_ADDRESS + '/api/admin/upload-image', {
+            method: 'POST',
+            credentials: 'include',
+            body: formData,
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    setImg(data.msg);
+                } else {
+                    setImgErr(data.msg);
+                }
+            })
+            .catch(console.error);
     }
 
     function handleMainFormSubmit(e) {
@@ -105,10 +125,10 @@ export function AdminMovieForm({ api, method, movie }) {
 
     return (
         <>
-            <form onSubmit={handleImageFormSubmit} className="col-12 col-md-9 col-lg-6 mt-5">
+            <form onChange={handleImageFormSubmit} className="col-12 col-md-9 col-lg-6 mt-5">
                 <img id="img_preview" className="d-block w-100 object-fit-contain"
                     style={{ height: '20rem', backgroundColor: '#eee' }}
-                    src={img ? (SERVER_ADDRESS + '/img/movies/' + img) : defaultImg} alt="Movie thumbnail" />
+                    src={img ? (SERVER_ADDRESS + img) : defaultImg} alt="Movie thumbnail" />
                 <p id="img_path">{img}</p>
                 <input type="file" className={"form-control" + (imgErr ? ' is-invalid' : '')} id="img" name="img" />
                 <div className="invalid-feedback">{imgErr}</div>
